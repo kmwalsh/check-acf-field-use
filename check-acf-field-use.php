@@ -93,7 +93,7 @@ class CheckACFFieldUse {
 		endif;
 
 		$http_query = http_build_query( $query );
-		wp_safe_redirect( untrailingslashit( home_url() ) . $url['path'] . '?' . $http_query );
+		wp_safe_redirect( esc_url( untrailingslashit( home_url() ) . $url['path'] . '?' . $http_query ) );
 		exit();
 	}
 
@@ -194,17 +194,7 @@ class CheckACFFieldUse {
 
 			<div id="col-right">
 
-				<div class="col-wrap">
-					<h2><?php esc_attr_e( 'Export as CSV', 'check-acf-field-use' ); ?></h2>
-					<div class="inside">
-							<?php 
-								// @TODO: CSV export
-								submit_button(
-									'Export Data as CSV', $type = 'primary', $name = 'export', $wrap = FALSE, $other_attributes = NULL
-								);
-							?>
-					</div>
-				</div>
+				<div class="col-wrap"></div>
 
 			</div>
 
