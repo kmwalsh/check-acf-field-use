@@ -159,9 +159,8 @@ class CheckACFFieldUse {
 		$sql = $wpdb->prepare(
 			"SELECT DISTINCT ID, post_title, meta_value from `{$wpdb->base_prefix}posts`
 			LEFT JOIN `{$wpdb->base_prefix}postmeta` ON `post_id` = `ID`
-			WHERE `post_status` = 'publish' AND `meta_key` LIKE %s AND `meta_value` NOT LIKE %s AND meta_value IS NOT NULL AND meta_value <> '';",
-			'%' . $wpdb->esc_like($field) . '%',
-			'%field_%'
+			WHERE `post_status` = 'publish' AND `meta_key` LIKE %s AND `meta_value` NOT LIKE %field% AND meta_value IS NOT NULL AND meta_value <> '';",
+			'%' . $wpdb->esc_like($field) . '%'
 		);
 		$field_uses = $wpdb->get_results( $sql );
 
