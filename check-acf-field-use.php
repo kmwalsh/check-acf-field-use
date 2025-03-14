@@ -80,7 +80,6 @@ class CheckACFFieldUse {
 	 * @return void
 	 */
 	public function form_action() {
-
 		$url = parse_url( wp_get_referer() );
 		parse_str( $url['query'], $query );
 		unset($query['no-field']);
@@ -163,7 +162,6 @@ class CheckACFFieldUse {
 			'%' . $wpdb->esc_like($field) . '%'
 		);
 		$field_uses = $wpdb->get_results( $sql );
-
 		return $field_uses;
 	}
 
@@ -183,7 +181,7 @@ class CheckACFFieldUse {
 				<div class="col-wrap">
 					<h2><?php esc_attr_e( 'Field Use Count', 'check-acf-field-use' ); ?></h2>
 					<div class="inside">
-						<?php $count = count( $field_uses ); ?>
+						<?php $count = is_array( $field_uses ) ? count( $field_uses ) : '0'; ?>
 						<p>Your field is used <?php echo $count; ?> times.</p>
 					</div>
 
@@ -198,40 +196,42 @@ class CheckACFFieldUse {
 			</div>
 
 		</div>
-		<hr>
-		<table class="widefat">
-			<thead>
-			<tr>
-				<th class="row-title"><strong><?php esc_attr_e( 'Post', 'check-acf-field-use' ); ?></strong></th>
-				<th><strong><?php esc_attr_e( 'Post Permalink', 'check-acf-field-use' ); ?></strong></th>
-				<th><strong><?php esc_attr_e( 'Post ID', 'check-acf-field-use' ); ?></strong></th>
-				<th><strong><?php esc_attr_e( 'Field Value', 'check-acf-field-use' ); ?></strong></th>
-			</tr>
-			</thead>
-			<tbody>
-			<?php foreach ( $field_uses as $field_use ) :
+		<?php if ( is_array( $field_uses ) ) : ?>
+			<hr>
+			<table class="widefat">
+				<thead>
+				<tr>
+					<th class="row-title"><strong><?php esc_attr_e( 'Post', 'check-acf-field-use' ); ?></strong></th>
+					<th><strong><?php esc_attr_e( 'Post Permalink', 'check-acf-field-use' ); ?></strong></th>
+					<th><strong><?php esc_attr_e( 'Post ID', 'check-acf-field-use' ); ?></strong></th>
+					<th><strong><?php esc_attr_e( 'Field Value', 'check-acf-field-use' ); ?></strong></th>
+				</tr>
+				</thead>
+				<tbody>
+				<?php 
+					foreach ( $field_uses as $field_use ) :
+					?>
+					
+						<tr>
+							<td class="row-title"><label for="tablecell"><a href="<?php echo esc_url( get_edit_post_link( $field_use->ID) ); ?>"><?php echo esc_html( $field_use->post_title ); ?></a></label></td>
+							<td><a href="<?php echo esc_url( get_permalink( $field_use->ID) ); ?>"><?php echo esc_url( get_permalink( $field_use->ID) ); ?></a></td>
+							<td><?php echo esc_html( $field_use->ID ); ?></td>
+							<td><?php echo esc_html( $field_use->meta_value ); ?></td>
+						</tr>
+
+					<?php
+				endforeach;
 				?>
-				
-					<tr>
-						<td class="row-title"><label for="tablecell"><a href="<?php echo esc_url( get_edit_post_link( $field_use->ID) ); ?>"><?php echo esc_html( $field_use->post_title ); ?></a></label></td>
-						<td><a href="<?php echo esc_url( get_permalink( $field_use->ID) ); ?>"><?php echo esc_url( get_permalink( $field_use->ID) ); ?></a></td>
-						<td><?php echo esc_html( $field_use->ID ); ?></td>
-						<td><?php echo esc_html( $field_use->meta_value ); ?></td>
-					</tr>
-
-				<?php
-			endforeach;
-			?>
-			<tfoot>
-			<tr>
-				<th class="row-title"><strong><?php esc_attr_e( 'Post', 'check-acf-field-use' ); ?></strong></th>
-				<th><strong><?php esc_attr_e( 'Post Permalink', 'check-acf-field-use' ); ?></strong></th>
-				<th><strong><?php esc_attr_e( 'Post ID', 'check-acf-field-use' ); ?></strong></th>
-				<th><strong><?php esc_attr_e( 'Field Value', 'check-acf-field-use' ); ?></strong></th>
-			</tr>
-			</tfoot>
-			</table>
-
+				<tfoot>
+				<tr>
+					<th class="row-title"><strong><?php esc_attr_e( 'Post', 'check-acf-field-use' ); ?></strong></th>
+					<th><strong><?php esc_attr_e( 'Post Permalink', 'check-acf-field-use' ); ?></strong></th>
+					<th><strong><?php esc_attr_e( 'Post ID', 'check-acf-field-use' ); ?></strong></th>
+					<th><strong><?php esc_attr_e( 'Field Value', 'check-acf-field-use' ); ?></strong></th>
+				</tr>
+				</tfoot>
+				</table>
+			<?php endif; ?>
 		<?php
 	}
 
